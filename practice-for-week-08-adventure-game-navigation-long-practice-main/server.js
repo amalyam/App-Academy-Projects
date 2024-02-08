@@ -145,9 +145,9 @@ const server = http.createServer((req, res) => {
     }
 
     // Phase 6: Redirect if no matching route handlers
-    // res.statusCode = 404;
-    // res.setHeader("Content-Type", "text/html");
-    // return res.end("Page not found");
+    res.statusCode = 404;
+    res.setHeader("Content-Type", "text/html");
+    return res.end("Page not found");
   });
 });
 
