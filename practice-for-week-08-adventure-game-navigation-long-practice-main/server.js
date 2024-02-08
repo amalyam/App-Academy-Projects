@@ -38,6 +38,17 @@ const server = http.createServer((req, res) => {
       res.end();
     }
 
+    function redirectIfWrongAction(action) {
+      try {
+        action;
+      } catch (e) {
+        let response = fs.readFileSync("./views/error.html", "utf-8");
+        response = response
+          .replace(/#{errorMessage}/, e)
+          .replace(/#{roomId}/, player.currentRoom);
+      }
+    }
+
     /* ======================== ROUTE HANDLERS ========================== */
     const urlParts = req.url.split("/");
 
@@ -108,7 +119,28 @@ const server = http.createServer((req, res) => {
 
     redirectIfNoPlayer();
     // Phase 5: POST /items/:itemId/:action
-    if (req.method === "POST" && req.url === "/items/:itemId/action") {
+    if (req.method === "POST" && req.url.startsWith("/items")) {
+      const itemId = urlParts[2];
+      const action = urlParts[3];
+
+      try {
+        switch (action) {
+          case "drop":
+            redirectIfWrongAction(player.dropItem(itemId));
+            break;
+          case "eat":
+            redirectIfWrongAction(player.eatItem(itemId));
+            break;
+          case "take":
+            redirectIfWrongAction(player.takeItem(itemId));
+            break;
+        }
+      } catch (e) {
+        console.log(e);
+      } finally {
+        res.writeHead(302, { Location: `/rooms/${player.currentRoom}` });
+        res.end();
+      }
     }
 
     // Phase 6: Redirect if no matching route handlers
