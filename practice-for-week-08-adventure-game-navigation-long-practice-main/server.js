@@ -113,6 +113,7 @@ const server = http.createServer((req, res) => {
           return res.end();
         } catch (e) {
           console.log(e);
+          return res.end();
         }
       }
     }
