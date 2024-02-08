@@ -39,6 +39,8 @@ const server = http.createServer((req, res) => {
     }
 
     /* ======================== ROUTE HANDLERS ========================== */
+    const urlParts = req.url.split("/");
+
     // Phase 1: GET /
     if (req.method === "GET" && req.url === "/") {
       // replace availableRooms
@@ -61,7 +63,6 @@ const server = http.createServer((req, res) => {
     }
 
     redirectIfNoPlayer();
-    const urlParts = req.url.split("/");
     if (req.method === "GET" && urlParts[1] === "rooms") {
       // obtain the current roomId by parsing the URL
       const roomId = urlParts[2];
