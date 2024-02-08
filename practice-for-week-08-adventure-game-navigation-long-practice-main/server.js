@@ -139,7 +139,7 @@ const server = http.createServer((req, res) => {
         console.log(e);
       } finally {
         res.writeHead(302, { Location: `/rooms/${player.currentRoom}` });
-        res.end();
+        return res.end();
       }
     }
 
