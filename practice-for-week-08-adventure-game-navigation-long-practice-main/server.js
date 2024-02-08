@@ -54,7 +54,8 @@ const server = http.createServer((req, res) => {
 
     // Phase 2: POST /player
     if (req.method === "POST" && req.url === "/player") {
-      player = new Player(req.body.name, req.body.roomId);
+      player = new Player(req.body.name, world.rooms[req.body.roomId]);
+      console.log(player);
       res.writeHead(302, { Location: `/rooms/${req.body.roomId}` });
       return res.end();
     }
@@ -62,23 +63,45 @@ const server = http.createServer((req, res) => {
     redirectIfNoPlayer();
     const urlParts = req.url.split("/");
     if (req.method === "GET" && urlParts[1] === "rooms") {
+      // obtain the current roomId by parsing the URL
+      const roomId = urlParts[2];
+      const requestedRoom = world.rooms[roomId];
+
+      // if the specified `:roomId` route parameter is not the `roomId`
+      // of the player's current room, redirect client to correct
+      // current room of player
+      if (requestedRoom !== player.currentRoom) {
+        for (const room in world.rooms) {
+          if (world.rooms[room].name === player.currentRoom.name) {
+            res.writeHead(302, {
+              Location: `/rooms/${room}`,
+            });
+            return res.end();
+          }
+        }
+      }
+      // Phase 3: GET /rooms/:roomId
       if (urlParts.length === 3) {
-        // Phase 3: GET /rooms/:roomId
-        // obtain the current roomId by parsing the URL
-        const roomId = req.url.split("/")[2];
-        const room = world.rooms[roomId];
         let response = fs.readFileSync("./views/room.html", "utf-8");
         response = response
-          .replace(/#{roomName}/g, room.name)
+          .replace(/#{roomName}/g, requestedRoom.name)
           .replace(/#{inventory}/g, player.inventoryToString())
-          .replace(/#{roomItems}/g, room.itemsToString())
-          .replace(/#{exits}/, room.exitsToString());
+          .replace(/#{roomItems}/g, requestedRoom.itemsToString())
+          .replace(/#{exits}/, requestedRoom.exitsToString());
 
         res.statusCode = 200;
         res.setHeader("Content-Type", "text/html");
         return res.end(response);
       } else if (urlParts.length === 4) {
         // Phase 4: GET /rooms/:roomId/:direction
+        const direction = urlParts[3];
+        const nextRoom = player.move(direction[0]);
+        try {
+          res.writeHead(302, { Location: `/rooms/${nextRoom}` });
+          return res.end();
+        } catch (e) {
+          console.log(e);
+        }
       }
     }
 
