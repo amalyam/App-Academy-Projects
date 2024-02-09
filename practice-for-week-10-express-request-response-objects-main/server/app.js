@@ -1,5 +1,5 @@
 // DO NOT EDIT - Initialize Express, handle JSON requests
-const express = require('express');
+const express = require("express");
 const app = express();
 
 app.use(express.json());
@@ -10,7 +10,9 @@ app.use(express.json());
  *     Route: /version
  *     Response (Text): "1.0.0"
  */
-// Your code here
+app.get("/version", (req, res) => {
+  res.send("1.0.0");
+});
 
 /**
  *  Basic Phase 2 - Route param and JSON response
@@ -28,7 +30,20 @@ app.use(express.json());
  *  Hint: Use your name, birth date and favorite movies (as strings in the code)
  *  combined with the id sent as a route parameter in the url
  */
-// Your code here
+app.get("/viewers/:id", (req, res) => {
+  const user = {
+    id: req.params.id,
+    firstName: "Mickey",
+    lastName: "Mouse",
+    birthDate: "11/18/1928",
+    favoriteMovies: [
+      "Steamboat Willie",
+      "A Goofy Movie",
+      "2001: A Space Odyssey",
+    ],
+  };
+  res.send(user);
+});
 
 /** Basic Phase 3 - Query params in URL
  *      Method: GET
@@ -47,7 +62,14 @@ app.use(express.json());
  *          message required
  *          message required
  */
-// Your code here
+app.get("/info", (req, res) => {
+  const message = req.query.message;
+  if (!message) {
+    res.send("message required");
+  } else {
+    res.send(message);
+  }
+});
 
 /**
  *  IMPORTANT: Scroll to the top for basic phases.
@@ -81,7 +103,15 @@ app.use(express.json());
  *      Alternate response object:
  *          { "id": 98765432, "name": "Honey Sweet", "year": 1967, "isFavorite": false }
  */
-// Your code here
+app.post("/movies", (req, res) => {
+  const response = {
+    id: Math.floor(Math.random() * 10000000),
+    name: req.params.name,
+    year: req.params.year,
+    isFavorite: req.params.favorite === "on" ? true : false,
+  };
+  res.send(response);
+});
 
 /**
  *  Advanced Bonus Phase B - Research how to return static
@@ -102,8 +132,8 @@ app.use(express.json());
 
 // DO NOT EDIT - Set port and listener
 if (require.main === module) {
-    const port = 8000;
-    app.listen(port, () => console.log('Server is listening on port', port));
+  const port = 8000;
+  app.listen(port, () => console.log("Server is listening on port", port));
 } else {
-    module.exports = app;
+  module.exports = app;
 }
