@@ -35,7 +35,7 @@ const server = http.createServer((req, res) => {
     const ext = path.extname(req.url);
     if (req.method === "GET" && ext) {
       try {
-        const resBody = readFileSync('.' + req.url);
+        const resBody = readFileSync("." + req.url);
         res.statusCode = 200;
         if (ext === ".jpg" || ext === ".jpeg") {
           res.setHeader("Content-Type", "image/jpeg");
@@ -56,7 +56,7 @@ const server = http.createServer((req, res) => {
     }
     // Page Not Found
     res.statusCode = 404;
-    res.setHeader("Content-Type", "text/plain");
+    res.setHeader("Content-Type", "application/javascript");
     const resBody = "Page Not Found";
     res.write(resBody);
     res.end();
