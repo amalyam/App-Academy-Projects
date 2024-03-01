@@ -66,8 +66,6 @@ VALUES (1, 'Catnip Mouse'),
     (3, 'Chew Toy'),
     (4, 'Tunnel'),
     (4, 'Flopping Fish'),
-    (5, 'Crinkle Ball'),
     (7, 'Cheetos'),
+    (8, 'Crinkle Ball'),
     (8, 'Yarn');
-
-DELETE FROM cats WHERE cats.name = 'Smudge';
