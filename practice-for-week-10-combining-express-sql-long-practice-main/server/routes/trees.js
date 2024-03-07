@@ -121,7 +121,31 @@ router.delete("/:id", (req, res, next) => {
  *   - Property: message
  *   - Value: success
  */
-// Your code here
+router.put("/:id", (req, res, next) => {
+  console.log("req.params.id:", req.params.id);
+  console.log("req.body.id:", req.body.id);
+  console.log(req.body);
+  if (Number(req.params.id) == Number(req.body.id)) {
+    const updateTree =
+      "UPDATE trees SET tree = ?, location = ?, height_ft = ?, ground_circumference_ft = ? WHERE id = ?";
+    const params = [
+      req.params.name,
+      req.params.location,
+      req.params.height,
+      req.params.size,
+    ];
+
+    db.run(updateTree, params, (err, row) => {
+      if (err) {
+        next(err);
+      } else {
+        res.json({ message: "success" });
+      }
+    });
+  } else {
+    res.status(400).json({ error: "ids do not match" });
+  }
+});
 
 // Export class - DO NOT MODIFY
 module.exports = router;
