@@ -46,7 +46,18 @@ router.get("/", (req, res, next) => {
  * Response: JSON Object
  *   - Properties: id, tree, location, height_ft, ground_circumference_ft
  */
-// Your code here
+router.get("/:id", (req, res, next) => {
+  const getSpecificTree = "SELECT * FROM trees WHERE id = ?";
+  const params = [req.params.id];
+
+  db.all(getSpecificTree, params, (err, rows) => {
+    if (err) {
+      next(err);
+    } else {
+      res.json(rows);
+    }
+  });
+});
 
 /**
  * INTERMEDIATE PHASE 4 - INSERT tree row into the database
