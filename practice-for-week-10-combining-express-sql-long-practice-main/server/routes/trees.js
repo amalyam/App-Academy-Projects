@@ -98,7 +98,18 @@ router.post("/", (req, res, next) => {
  *   - Property: message
  *   - Value: success
  */
-// Your code here
+router.delete("/:id", (req, res, next) => {
+  const deleteTree = "DELETE FROM trees WHERE id = ?";
+  const params = [req.params.id];
+
+  db.run(deleteTree, params, (err, row) => {
+    if (err) {
+      next(err);
+    } else {
+      res.json({ message: "success" });
+    }
+  });
+});
 
 /**
  * INTERMEDIATE PHASE 6 - UPDATE a tree row in the database
