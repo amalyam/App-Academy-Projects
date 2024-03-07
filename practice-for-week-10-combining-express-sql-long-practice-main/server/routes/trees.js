@@ -69,7 +69,24 @@ router.get("/:id", (req, res, next) => {
  *   - Property: message
  *   - Value: success
  */
-// Your code here
+router.post("/", (req, res, next) => {
+  const insertNewTree =
+    "INSERT INTO trees (tree, location, height_ft, ground_circumference_ft) VALUES (?,?,?,?)";
+  const params = [
+    req.params.name,
+    req.params.location,
+    req.params.height,
+    req.params.size,
+  ];
+
+  db.run(insertNewTree, params, (err, row) => {
+    if (err) {
+      next(err);
+    } else {
+      res.json({ message: "success" });
+    }
+  });
+});
 
 /**
  * INTERMEDIATE PHASE 5 - DELETE a tree row from the database
