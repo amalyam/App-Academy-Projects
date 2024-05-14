@@ -3,6 +3,7 @@ from config import Config
 
 app = Flask(__name__)
 app.config.from_object(Config)
+print("SECRET KEY IS: ", app.config["SECRET_KEY"])
 
 @app.route('/')
 def hello():
